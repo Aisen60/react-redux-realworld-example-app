@@ -1,0 +1,12 @@
+export const INITUSERINFO = "init_user_info";
+export const GETUSERINFO = "get_user_info";
+export const USERLOGIN = "user_login";
+export const USERREGISTER = "user_register";
+export const USERERROR = "user_error";
+export const CHANGEAPPNAV = "change_app_nav";
+export const GETALLTAG = "get_all_tag";
+export const INITALLTAG = "init_all_tag";
+export const CHANGEHOMETAB = "change_home_tab";
+export const GETGLOBALARTICLESlIST = "get_global_articles_list";
+export const INITGLOBALARTICLESlIST = "init_global_articles_list";
+export const CHANGEGLOBALOFFSET = "change_global_offset";

@@ -1,0 +1,138 @@
+import React, { PureComponent } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+
+function Logo() {
+  return (
+    <Link to="/" className="navbar-brand">
+      conduit
+    </Link>
+  );
+}
+
+const NavItem = (props) => {
+  const navName = props.name,
+    to = props.to,
+    className = props.active === navName ? "nav-link active" : "nav-link",
+    icon = props.icon;
+  return (
+    <li className="nav-item">
+      <Link className={className} to={to}>
+        {icon && <i className={icon}></i>}
+        {navName}
+      </Link>
+    </li>
+  );
+};
+
+function LoggedOutView(props) {
+  const currentUser = props.currentUser;
+  if (Object.keys(currentUser).length === 0) {
+    const loggedViewArr = [
+      {
+        name: "Home",
+        to: "/",
+      },
+      {
+        name: "Sign in",
+        to: "/login",
+      },
+      {
+        name: "Sign up",
+        to: "/register",
+      },
+    ];
+
+    return (
+      <ul className="nav navbar-nav pull-xs-right">
+        {loggedViewArr.map((nav) => {
+          return (
+            <NavItem
+              name={nav.name}
+              to={nav.to}
+              active={props.active}
+              key={nav.to}
+            ></NavItem>
+          );
+        })}
+      </ul>
+    );
+  }
+  return null;
+}
+
+function LoggedInView(props) {
+  const currentUser = props.currentUser;
+  if (Object.keys(currentUser).length > 0) {
+    const loggedViewArr = [
+      {
+        name: "Home",
+        to: "/",
+      },
+      {
+        name: "New Post",
+        to: "/editor",
+        icon: "ion-compose",
+      },
+      {
+        name: "Setting",
+        to: "/Setting",
+        icon: "ion-gear-a",
+      },
+      {
+        name: currentUser.username,
+        to: `@${currentUser.username}`,
+      },
+    ];
+
+    return (
+      <ul className="nav navbar-nav pull-xs-right">
+        {loggedViewArr.map((nav) => {
+          return (
+            <NavItem
+              name={nav.name}
+              to={nav.to}
+              icon={nav.icon}
+              active={props.active}
+              key={nav.to}
+            ></NavItem>
+          );
+        })}
+      </ul>
+    );
+  }
+  return null;
+}
+
+class Header extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return (
+      <nav className="navbar navbar-light">
+        <div className="container">
+          <Logo />
+          <LoggedOutView
+            active={this.props.navActive}
+            currentUser={this.props.userInfo}
+          />
+          <LoggedInView
+            active={this.props.navActive}
+            currentUser={this.props.userInfo}
+          />
+        </div>
+      </nav>
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    userInfo: state.userInfo,
+    navActive: state.navActive,
+  };
+};
+
+export default connect(mapStateToProps, null)(Header);
