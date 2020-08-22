@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { getToken } from "../utils";
 import {
   changeAppNav,
   getUserInfo,
@@ -9,9 +8,9 @@ import {
   getGlobalArticlesList,
   changeGlobalLimit,
 } from "../store/actionCreators";
-import Articles from "../components/Articles";
-import Tag from "../components/Tag";
+import ArticlePreview from "../components/ArticlePreview";
 import Pagination from "../components/Pagination";
+import TagList from "../components/TagList";
 
 const Banner = () => {
   return (
@@ -58,7 +57,7 @@ const ArticlesList = (props) => {
     return (
       <div>
         {props.list.map((item, index) => {
-          return <Articles article={item} key={item.title + index} />;
+          return <ArticlePreview article={item} key={item.title + index} />;
         })}
       </div>
     );
@@ -116,11 +115,7 @@ class Home extends PureComponent {
             <div className="col-md-3">
               <div className="sidebar">
                 <p>Popular Tags</p>
-                <div className="tag-list">
-                  {this.props.tags.map((item, index) => {
-                    return <Tag name={item} key={item + "-" + index}></Tag>;
-                  })}
-                </div>
+                <TagList tagList={this.props.tags}></TagList>
               </div>
             </div>
           </div>
@@ -129,9 +124,6 @@ class Home extends PureComponent {
     );
   }
   componentDidMount() {
-    if (getToken()) {
-      this.props.getUserInfoDispatch();
-    }
     this.props.changePageTab();
     this.props.getTagDispatch();
     this.props.getGlobalArticlesDispatch(this.props.offset, this.props.limit);

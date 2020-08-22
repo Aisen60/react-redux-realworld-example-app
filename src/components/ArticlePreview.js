@@ -1,25 +1,8 @@
 import React from "react";
-// import Avatar from "./Avatar";
-import ArticleMeta from "./ArticleMeta";
 import { Link } from "react-router-dom";
-import Tag from "./Tag";
+import ArticleMeta from "./ArticleMeta";
+import TagList from "../components/TagList";
 
-const TagList = (props) => {
-  if (props.tagList.length > 0) {
-    return (
-      <ul className="tag-list">
-        {props.tagList.map((item, index) => {
-          return (
-            <li key={index}>
-              <Tag className="tag-outline" name={item}></Tag>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }
-  return null;
-};
 export default (props) => {
   const article = props.article;
   return (
@@ -39,11 +22,11 @@ export default (props) => {
         </div>
       </ArticleMeta>
 
-      <Link className="preview-link" to={`#/article/${article.slug}`}>
+      <Link className="preview-link" to={`/article/${article.slug}`}>
         <h1>{article.title}</h1>
         <p>{article.description}</p>
         <span>Read more...</span>
-        <TagList tagList={article.tagList}></TagList>
+        <TagList tagList={article.tagList} tagClassName="tag-outline"></TagList>
       </Link>
     </div>
   );

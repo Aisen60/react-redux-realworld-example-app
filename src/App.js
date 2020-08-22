@@ -6,16 +6,13 @@ import history from "./utils/history";
 import loadable from "./utils/loadable";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { getUserInfo } from "./store/actionCreators";
+import { getToken } from "./utils";
 
 const Home = loadable(() => import("./pages/Home"));
 const Login = loadable(() => import("./pages/Login"));
 const Register = loadable(() => import("./pages/Register"));
 const Article = loadable(() => import("./pages/Article"));
-
-// import Home from "./pages/Home"
-// import Login from "./pages/Login"
-// import Register from "./pages/Register"
-
 
 class App extends Component {
   render() {
@@ -26,11 +23,17 @@ class App extends Component {
           <Route path="/" exact component={Home}></Route>
           <Route path="/login" exact component={Login}></Route>
           <Route path="/register" exact component={Register}></Route>
-          <Route path="/Article" exact component={Article}></Route>
+          <Route path="/Article/:slug" exact component={Article}></Route>
           <Footer />
         </HashRouter>
       </Provider>
     );
+  }
+  componentDidMount() {
+    if (getToken()) {
+      const action = getUserInfo();
+      store.dispatch(action);
+    }
   }
 }
 

@@ -101,10 +101,10 @@ class Login extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-    return {
-      errors: state.errors,
-    };
+  return {
+    errors: state.errors,
   };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {

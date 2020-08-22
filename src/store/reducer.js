@@ -8,6 +8,10 @@ import {
   CHANGEHOMETAB,
   INITGLOBALARTICLESlIST,
   CHANGEGLOBALOFFSET,
+  INITARTICLEDETAILS,
+  UPDATEARTICLEAUTHOR,
+  INITARTICLECOMMENTS,
+  ADDARTICLECOMMENTS,
 } from "./actionTypes";
 
 const defaultState = {
@@ -20,6 +24,8 @@ const defaultState = {
   limit: 10,
   articlesCount: 0,
   errors: null,
+  articleDetails: "",
+  currentArticleComment: [],
 };
 
 export default produce((state = defaultState, action) => {
@@ -47,7 +53,18 @@ export default produce((state = defaultState, action) => {
     case CHANGEGLOBALOFFSET:
       state.offset = action.data;
       break;
-
+    case INITARTICLEDETAILS:
+      state.articleDetails = action.data;
+      break;
+    case UPDATEARTICLEAUTHOR:
+      state.articleDetails.author = action.data;
+      break;
+    case INITARTICLECOMMENTS:
+      state.currentArticleComment = action.data;
+      break;
+    case ADDARTICLECOMMENTS:
+      state.currentArticleComment.unshift(action.data);
+      break;
     default:
       return state;
   }

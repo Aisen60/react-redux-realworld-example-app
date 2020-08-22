@@ -11,6 +11,17 @@ import {
   INITGLOBALARTICLESlIST,
   GETGLOBALARTICLESlIST,
   CHANGEGLOBALOFFSET,
+  GETARTICLEDETAILS,
+  INITARTICLEDETAILS,
+  FOLLOW,
+  UNFOLLOW,
+  UPDATEARTICLEAUTHOR,
+  FAVORITRARTICLE,
+  UNFAVORITRARTICLE,
+  GETARTICLECOMMENTS,
+  INITARTICLECOMMENTS,
+  CREATEARTICLECOMMENTS,
+  ADDARTICLECOMMENTS,
 } from "./actionTypes";
 
 export const initUserInfo = (data) => ({
@@ -36,7 +47,6 @@ export const userError = (data) => ({
   type: USERERROR,
   data,
 });
-
 
 export const changeAppNav = (data) => ({
   type: CHANGEAPPNAV,
@@ -69,5 +79,60 @@ export const initGlobalArticlesList = (data) => ({
 
 export const changeGlobalLimit = (data) => ({
   type: CHANGEGLOBALOFFSET,
+  data,
+});
+
+export const getArticleDetails = (data) => ({
+  type: GETARTICLEDETAILS,
+  data,
+});
+
+export const initArticleDetails = (data) => ({
+  type: INITARTICLEDETAILS,
+  data,
+});
+
+export const followUser = (data) => ({
+  type: FOLLOW,
+  data,
+});
+
+export const unFollowUser = (data) => ({
+  type: UNFOLLOW,
+  data,
+});
+
+export const updateArticleAuthor = (data) => ({
+  type: UPDATEARTICLEAUTHOR,
+  data,
+});
+
+export const favoriteArticle = (data) => ({
+  type: FAVORITRARTICLE,
+  data,
+});
+
+export const UnFavoriteArticle = (data) => ({
+  type: UNFAVORITRARTICLE,
+  data,
+});
+
+export const getArticleComments = (data) => ({
+  type: GETARTICLECOMMENTS,
+  data,
+});
+
+export const initArticleComments = (data) => ({
+  type: INITARTICLECOMMENTS,
+  data,
+});
+
+export const createArticleComments = (data) => ({
+  type: CREATEARTICLECOMMENTS,
+  data,
+});
+
+export const addArticleComments = (data) => ({
+  type: ADDARTICLECOMMENTS,
   data,
 });
