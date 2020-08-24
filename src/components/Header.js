@@ -19,6 +19,7 @@ const NavItem = (props) => {
     <li className="nav-item">
       <Link className={className} to={to}>
         {icon && <i className={icon}></i>}
+        {props.children}
         {navName}
       </Link>
     </li>
@@ -76,12 +77,13 @@ function LoggedInView(props) {
       },
       {
         name: "Setting",
-        to: "/Setting",
+        to: "/settings",
         icon: "ion-gear-a",
       },
       {
         name: currentUser.username,
         to: `@${currentUser.username}`,
+        user: currentUser,
       },
     ];
 
@@ -94,8 +96,13 @@ function LoggedInView(props) {
               to={nav.to}
               icon={nav.icon}
               active={props.active}
+              user={nav.user}
               key={nav.to}
-            ></NavItem>
+            >
+              {nav.user && (
+                <img src={nav.user.image} alt="" className="user-pic"></img>
+              )}
+            </NavItem>
           );
         })}
       </ul>

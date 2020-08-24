@@ -22,3 +22,15 @@ export const GETARTICLECOMMENTS = "get_article_comments";
 export const INITARTICLECOMMENTS = "init_article_comments";
 export const CREATEARTICLECOMMENTS = "create_article_comments";
 export const ADDARTICLECOMMENTS = "add_article_comments";
+
+export const CHANGE_CUTTENT_USER_TEXT = "change_current_user_text";
+export const CHANGE_CURRENT_USER = "change_current_user";
+export const CLEAN_USER_INFO = "clean_user_info";
+
+export const CLEAN_EDITOR = "clean_editor";
+export const SET_EDITOR = "set_editor";
+export const CHANGE_EDITOR_TEXT = "change_editor_text";
+export const ADD_EDITOR_TAG = "add_editor_tag";
+export const DELETE_EDITOR_TAG = "delete_editor_tag";
+export const CREATE_ARTICLE = "create_article";
+export const UPDATE_ARTICLE = "update_article";

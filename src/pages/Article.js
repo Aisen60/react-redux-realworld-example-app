@@ -242,35 +242,35 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispacth) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getCurrentArticle(slug) {
       const action = getArticleDetails(slug);
-      dispacth(action);
+      dispatch(action);
     },
     getCurrentComments(slug) {
       const action = getArticleComments(slug);
-      dispacth(action);
+      dispatch(action);
     },
     handleCreateComments(slug, data) {
       const action = createArticleComments({slug, data});
-      dispacth(action);
+      dispatch(action);
     },
     handleFollow(userName) {
       const action = followUser(userName);
-      dispacth(action);
+      dispatch(action);
     },
     handleUnFollow(userName) {
       const action = unFollowUser(userName);
-      dispacth(action);
+      dispatch(action);
     },
     handleFavorite(slug) {
       const action = favoriteArticle(slug);
-      dispacth(action);
+      dispatch(action);
     },
     handleUnfavorite(slug) {
       const action = UnFavoriteArticle(slug);
-      dispacth(action);
+      dispatch(action);
     },
   };
 };

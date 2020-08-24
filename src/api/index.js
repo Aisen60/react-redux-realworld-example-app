@@ -25,6 +25,16 @@ export const User = {
       data,
     });
   },
+  update(data) {
+    return request({
+      url: "/user",
+      method: "put",
+      headers: {
+        authorization: `Token ${getToken()}`,
+      },
+      data,
+    });
+  },
 };
 
 export const Tags = {
@@ -51,6 +61,28 @@ export const Articles = {
       headers: {
         authorization: getToken() ? `Token ${getToken()}` : "",
       },
+    });
+  },
+  cretae(data) {
+    return request({
+      url: `/articles`,
+      method: "post",
+      headers: {
+        authorization: getToken() ? `Token ${getToken()}` : "",
+      },
+      data,
+    });
+  },
+  update(obj) {
+    const slug = obj.slug,
+      data = obj.details;
+    return request({
+      url: `/articles/${slug}`,
+      method: "put",
+      headers: {
+        authorization: getToken() ? `Token ${getToken()}` : "",
+      },
+      data,
     });
   },
 };

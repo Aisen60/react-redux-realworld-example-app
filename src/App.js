@@ -13,6 +13,8 @@ const Home = loadable(() => import("./pages/Home"));
 const Login = loadable(() => import("./pages/Login"));
 const Register = loadable(() => import("./pages/Register"));
 const Article = loadable(() => import("./pages/Article"));
+const Settings = loadable(() => import("./pages/Settings"));
+const Editor = loadable(() => import("./pages/Editor"));
 
 class App extends Component {
   render() {
@@ -23,7 +25,9 @@ class App extends Component {
           <Route path="/" exact component={Home}></Route>
           <Route path="/login" exact component={Login}></Route>
           <Route path="/register" exact component={Register}></Route>
-          <Route path="/Article/:slug" exact component={Article}></Route>
+          <Route path="/article/:slug" exact component={Article}></Route>
+          <Route path="/Editor/:slug?" exact component={Editor}></Route>
+          <Route path="/settings" exact component={Settings}></Route>
           <Footer />
         </HashRouter>
       </Provider>

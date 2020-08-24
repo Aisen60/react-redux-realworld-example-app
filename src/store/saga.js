@@ -1,4 +1,4 @@
-import { saveToken } from "../utils";
+import { saveToken, destroyToken } from "../utils";
 import history from "../utils/history";
 
 import { put, takeEvery } from "redux-saga/effects";
@@ -15,6 +15,10 @@ import {
   UNFAVORITRARTICLE,
   GETARTICLECOMMENTS,
   CREATEARTICLECOMMENTS,
+  CHANGE_CURRENT_USER,
+  CLEAN_USER_INFO,
+  CREATE_ARTICLE,
+  UPDATE_ARTICLE,
 } from "./actionTypes";
 import {
   userError,
@@ -25,6 +29,7 @@ import {
   updateArticleAuthor,
   initArticleComments,
   addArticleComments,
+  cleanEditor,
 } from "./actionCreators";
 import { User, Tags, Articles, Profile, Comments } from "../api";
 
@@ -55,6 +60,8 @@ const UserSaga = {
     try {
       const data = yield User.register(params.data),
         userInfo = data.user;
+      const action = initUserInfo(userInfo);
+      yield put(action);
       saveToken(userInfo.token);
       history.push("/");
     } catch (e) {
@@ -62,6 +69,24 @@ const UserSaga = {
       yield put(action);
       console.error(e);
     }
+  },
+  userUpdate: function* (params) {
+    try {
+      const data = yield User.update(params.data),
+        userInfo = data.user;
+      yield put(initUserInfo(userInfo));
+      yield put(userError([]));
+      saveToken(userInfo.token);
+      history.push("/");
+    } catch (e) {
+      const action = userError(e.response.data.errors);
+      yield put(action);
+      console.error(e);
+    }
+  },
+  userLogout: function () {
+    destroyToken();
+    history.push("/");
   },
 };
 
@@ -94,6 +119,30 @@ const ArticleSaga = {
       const action = initArticleDetails(fetchData.article);
       yield put(action);
     } catch (e) {
+      console.error(e);
+    }
+  },
+  cretae: function* (params) {
+    try {
+      yield Articles.cretae(params.data);
+      const action = cleanEditor();
+      yield put(action);
+      history.push("/");
+    } catch (e) {
+      const action = userError(e.response.data.errors);
+      yield put(action);
+      console.error(e);
+    }
+  },
+  update: function* (params) {
+    try {
+      yield Articles.update(params.data);
+      const action = cleanEditor();
+      yield put(action);
+      history.push("/");
+    } catch (e) {
+      const action = userError(e.response.data.errors);
+      yield put(action);
       console.error(e);
     }
   },
@@ -173,9 +222,13 @@ function* rootSaga() {
   yield takeEvery(GETUSERINFO, UserSaga.userInfo);
   yield takeEvery(USERLOGIN, UserSaga.userLogin);
   yield takeEvery(USERREGISTER, UserSaga.userRegister);
+  yield takeEvery(CHANGE_CURRENT_USER, UserSaga.userUpdate);
+  yield takeEvery(CLEAN_USER_INFO, UserSaga.userLogout);
   yield takeEvery(GETALLTAG, TagSaga.getTag);
   yield takeEvery(GETGLOBALARTICLESlIST, ArticleSaga.all);
   yield takeEvery(GETARTICLEDETAILS, ArticleSaga.details);
+  yield takeEvery(CREATE_ARTICLE, ArticleSaga.cretae);
+  yield takeEvery(UPDATE_ARTICLE, ArticleSaga.update);
   yield takeEvery(FOLLOW, ProfileSaga.follow);
   yield takeEvery(UNFOLLOW, ProfileSaga.unFollow);
   yield takeEvery(FAVORITRARTICLE, ProfileSaga.favorite);
