@@ -15,6 +15,8 @@ const Register = loadable(() => import("./pages/Register"));
 const Article = loadable(() => import("./pages/Article"));
 const Settings = loadable(() => import("./pages/Settings"));
 const Editor = loadable(() => import("./pages/Editor"));
+const Profile = loadable(() => import("./pages/Profile"));
+const Test = loadable(() => import("./pages/Test"));
 
 class App extends Component {
   render() {
@@ -26,8 +28,9 @@ class App extends Component {
           <Route path="/login" exact component={Login}></Route>
           <Route path="/register" exact component={Register}></Route>
           <Route path="/article/:slug" exact component={Article}></Route>
-          <Route path="/Editor/:slug?" exact component={Editor}></Route>
+          <Route path="/editor/:slug?" exact component={Editor}></Route>
           <Route path="/settings" exact component={Settings}></Route>
+          <Route path="/:profile/:type?" component={Profile}></Route>
           <Footer />
         </HashRouter>
       </Provider>

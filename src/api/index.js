@@ -106,6 +106,15 @@ export const Profile = {
       },
     });
   },
+  get(name) {
+    return request({
+      url: `/profiles/${name}`,
+      method: "get",
+      headers: {
+        authorization: `Token ${getToken()}`,
+      },
+    });
+  },
   favorite(slug) {
     return request({
       url: `/articles/${slug}/favorite`,

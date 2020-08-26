@@ -8,7 +8,7 @@ import {
   getGlobalArticlesList,
   changeGlobalLimit,
 } from "../store/actionCreators";
-import ArticlePreview from "../components/ArticlePreview";
+import ArticlesList from "../components/ArticlesList";
 import Pagination from "../components/Pagination";
 import TagList from "../components/TagList";
 
@@ -52,19 +52,6 @@ const GlobalFeed = (props) => {
   );
 };
 
-const ArticlesList = (props) => {
-  if (props.list.length > 0) {
-    return (
-      <div>
-        {props.list.map((item, index) => {
-          return <ArticlePreview article={item} key={item.title + index} />;
-        })}
-      </div>
-    );
-  }
-  return null;
-};
-
 const PaginationView = (props) => {
   const params = props.params;
   if (params.articlesCount > 0) {
@@ -100,7 +87,9 @@ class Home extends PureComponent {
                   />
                   <GlobalFeed tab={this.props.tab} />
                 </ul>
+
                 <ArticlesList list={this.props.articleList} />
+
                 <PaginationView
                   params={{
                     offset: this.props.offset,

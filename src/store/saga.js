@@ -19,6 +19,7 @@ import {
   CLEAN_USER_INFO,
   CREATE_ARTICLE,
   UPDATE_ARTICLE,
+  GET_PROFILES_USER,
 } from "./actionTypes";
 import {
   userError,
@@ -30,6 +31,7 @@ import {
   initArticleComments,
   addArticleComments,
   cleanEditor,
+  initProfilesUser
 } from "./actionCreators";
 import { User, Tags, Articles, Profile, Comments } from "../api";
 
@@ -187,6 +189,15 @@ const ProfileSaga = {
       console.error(e);
     }
   },
+  get: function* (params) {
+    try { 
+      const fetchData = yield Profile.get(params.data);
+      const action = initProfilesUser(fetchData.profile);
+      yield put(action);
+    } catch (e) {
+      console.error(e);
+    }
+  },
 };
 
 const CommentsSaga = {
@@ -235,6 +246,7 @@ function* rootSaga() {
   yield takeEvery(UNFAVORITRARTICLE, ProfileSaga.unfavorite);
   yield takeEvery(GETARTICLECOMMENTS, CommentsSaga.forArticle);
   yield takeEvery(CREATEARTICLECOMMENTS, CommentsSaga.create);
+  yield takeEvery(GET_PROFILES_USER, ProfileSaga.get);
 }
 
 export default rootSaga;

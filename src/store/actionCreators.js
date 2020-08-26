@@ -31,6 +31,8 @@ import {
   DELETE_EDITOR_TAG,
   CREATE_ARTICLE,
   UPDATE_ARTICLE,
+  GET_PROFILES_USER,
+  INIT_PROFILES_USER,
 } from "./actionTypes";
 
 export const initUserInfo = (data) => ({
@@ -186,5 +188,15 @@ export const createdArticle = (data) => ({
 
 export const updateArticle = (data) => ({
   type: UPDATE_ARTICLE,
+  data,
+});
+
+export const getProfilesUser = (data) => ({
+  type: GET_PROFILES_USER,
+  data,
+});
+
+export const initProfilesUser = (data) => ({
+  type: INIT_PROFILES_USER,
   data,
 });

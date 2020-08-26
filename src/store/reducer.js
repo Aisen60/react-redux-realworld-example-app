@@ -18,6 +18,7 @@ import {
   SET_EDITOR,
   ADD_EDITOR_TAG,
   DELETE_EDITOR_TAG,
+  INIT_PROFILES_USER,
 } from "./actionTypes";
 
 const defaultState = {
@@ -39,6 +40,12 @@ const defaultState = {
     description: "",
     tagList: [],
     tagValue: "",
+  },
+  currentProfiles: {
+    bio: "",
+    following: false,
+    image: "",
+    username: "",
   },
 };
 
@@ -106,6 +113,9 @@ export default produce((state = defaultState, action) => {
       break;
     case DELETE_EDITOR_TAG:
       state.currentEditor.tagList.splice(action.data, 1);
+      break;
+    case INIT_PROFILES_USER:
+      state.currentProfiles = action.data;
       break;
     default:
       return state;

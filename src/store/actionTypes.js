@@ -34,3 +34,6 @@ export const ADD_EDITOR_TAG = "add_editor_tag";
 export const DELETE_EDITOR_TAG = "delete_editor_tag";
 export const CREATE_ARTICLE = "create_article";
 export const UPDATE_ARTICLE = "update_article";
+
+export const GET_PROFILES_USER = "get_profiles_user";
+export const INIT_PROFILES_USER = "init_profiles_user";
