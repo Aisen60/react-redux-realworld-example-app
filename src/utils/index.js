@@ -45,22 +45,6 @@ export function parseTime(time, cFormat) {
   return time_str;
 }
 
-export function param2Obj(url = window.location.href) {
-  const search = url.split("?")[1];
-  if (!search) {
-    return {};
-  }
-  return JSON.parse(
-    '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, " ") +
-      '"}'
-  );
-}
-
 export const getToken = () => {
   return window.localStorage.getItem(JWTOKEN);
 };
@@ -75,7 +59,6 @@ export const destroyToken = () => {
 
 export default {
   parseTime,
-  param2Obj,
   getToken,
   saveToken,
   destroyToken,

@@ -13,7 +13,7 @@ function Logo() {
 const NavItem = (props) => {
   const navName = props.name,
     to = props.to,
-    className = props.active === navName ? "nav-link active" : "nav-link",
+    className = props.active === to ? "nav-link active" : "nav-link",
     icon = props.icon;
   return (
     <li className="nav-item">
@@ -112,10 +112,6 @@ function LoggedInView(props) {
 }
 
 class Header extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
   render() {
     return (
       <nav className="navbar navbar-light">
@@ -137,8 +133,8 @@ class Header extends PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    userInfo: state.userInfo,
-    navActive: state.navActive,
+    userInfo: state.auth.userInfo,
+    navActive: state.common.nav,
   };
 };
 

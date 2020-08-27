@@ -12,7 +12,8 @@ const style = {
   fontSize: "1.5rem",
   display: "block",
 };
-export default () => {
+
+const Footer = () => {
   return (
     <a
       rel="noopener noreferrer"
@@ -25,3 +26,5 @@ export default () => {
     </a>
   );
 };
+
+export default Footer;

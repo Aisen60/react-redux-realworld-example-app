@@ -12,6 +12,9 @@ import ArticlesList from "../components/ArticlesList";
 import Pagination from "../components/Pagination";
 import TagList from "../components/TagList";
 
+import { CHANGE_COMMON_NAV } from "../constants/actionTypes";
+import history from "../utils/history";
+
 const Banner = () => {
   return (
     <div className="banner">
@@ -76,7 +79,8 @@ class Home extends PureComponent {
     return (
       <div className="home-page">
         <Banner />
-        <div className="container page">
+        realworld 服务器 down 机了，项目刚好在重构，，不知道什么时候才能恢复。。。心塞 
+        {/* <div className="container page">
           <div className="row">
             <div className="col-md-9">
               <div className="feed-toggle">
@@ -108,14 +112,14 @@ class Home extends PureComponent {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }
   componentDidMount() {
-    this.props.changePageTab();
-    this.props.getTagDispatch();
-    this.props.getGlobalArticlesDispatch(this.props.offset, this.props.limit);
+    // this.props.changePageTab();
+    // this.props.getTagDispatch();
+    // this.props.getGlobalArticlesDispatch(this.props.offset, this.props.limit);
   }
   handlePageChange(offset) {
     this.props
@@ -145,7 +149,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     changePageTab: () => {
-      const action = changeAppNav("Home");
+      const action = { type: CHANGE_COMMON_NAV, payload: { nav: "Home1" } };
       dispatch(action);
     },
     getTagDispatch: () => {
