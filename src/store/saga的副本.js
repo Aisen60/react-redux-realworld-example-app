@@ -1,5 +1,5 @@
 import { saveToken, destroyToken } from "../utils";
-import history from "../utils/history";
+import history from "../router/history";
 
 import { put, takeEvery } from "redux-saga/effects";
 import {
@@ -31,7 +31,7 @@ import {
   initArticleComments,
   addArticleComments,
   cleanEditor,
-  initProfilesUser
+  initProfilesUser,
 } from "./actionCreators";
 import { User, Tags, Articles, Profile, Comments } from "../services";
 
@@ -190,7 +190,7 @@ const ProfileSaga = {
     }
   },
   get: function* (params) {
-    try { 
+    try {
       const fetchData = yield Profile.get(params.data);
       const action = initProfilesUser(fetchData.profile);
       yield put(action);

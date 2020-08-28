@@ -2,35 +2,27 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import ListErrors from "../components/ListErrors";
-import { changeAppNav, userRegister } from "../store/actionCreators";
+import { AUTH_REGISTER } from "../constants/actionTypes";
 class Login extends PureComponent {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       username: "",
       email: "",
       password: "",
     };
-    this.changeUserName = (ev) => {
-      this.setState({ username: ev.target.value });
+    this.updateState = (field) => (ev) => {
+      const state = this.state;
+      const newState = Object.assign({}, state, { [field]: ev.target.value });
+      this.setState(newState);
     };
-    this.changeEmail = (ev) => {
-      this.setState({ email: ev.target.value });
-    };
-    this.changePassword = (ev) => {
-      this.setState({ password: ev.target.value });
-    };
-
-    this.submitForm = (ev) => {
-      ev.preventDefault();
-      const data = {
-        user: {
-          username: this.state.username,
-          email: this.state.email,
-          password: this.state.password,
-        },
-      };
-      this.props.handleUserRegister(data);
+    this.onSubmit = (ev) => {
+      ev.stopPropagation();
+      this.props.handleAuthRegister(
+        this.state.username,
+        this.state.email,
+        this.state.password
+      );
     };
   }
   render() {
@@ -46,7 +38,7 @@ class Login extends PureComponent {
                 </Link>
               </p>
               <ListErrors errors={this.props.errors} />
-              <form onSubmit={this.submitForm}>
+              <form onSubmit={this.onSubmit}>
                 <fieldset>
                   <fieldset className="form-group">
                     <input
@@ -54,9 +46,7 @@ class Login extends PureComponent {
                       className="form-control form-control-lg"
                       placeholder="Username"
                       value={this.state.username}
-                      onChange={(ev) => {
-                        this.changeUserName(ev);
-                      }}
+                      onChange={this.updateState("username")}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -65,9 +55,7 @@ class Login extends PureComponent {
                       className="form-control form-control-lg"
                       placeholder="Email"
                       value={this.state.email}
-                      onChange={(ev) => {
-                        this.changeEmail(ev);
-                      }}
+                      onChange={this.updateState("email")}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -75,10 +63,8 @@ class Login extends PureComponent {
                       type="password"
                       className="form-control form-control-lg"
                       placeholder="Password"
-                      value={this.state.password}
-                      onChange={(ev) => {
-                        this.changePassword(ev);
-                      }}
+                      value={this.props.password}
+                      onChange={this.updateState("password")}
                     />
                   </fieldset>
                   <button
@@ -95,26 +81,20 @@ class Login extends PureComponent {
       </div>
     );
   }
-  componentDidMount() {
-    this.props.changePageTab();
-  }
 }
-
 const mapStateToProps = (state) => {
   return {
-    errors: state.errors,
+    errors: state.auth.errors,
+    username: state.auth.username,
+    email: state.auth.email,
+    password: state.auth.password,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    changePageTab: () => {
-      const action = changeAppNav("Sign up");
-      dispatch(action);
-    },
-    handleUserRegister: (data) => {
-      const action = userRegister(data);
-      dispatch(action);
+    handleAuthRegister: (username, email, password) => {
+      dispatch({ type: AUTH_REGISTER, payload: { username, email, password } });
     },
   };
 };

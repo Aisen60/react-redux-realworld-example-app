@@ -13,7 +13,7 @@ import Pagination from "../components/Pagination";
 import TagList from "../components/TagList";
 
 import { CHANGE_COMMON_NAV } from "../constants/actionTypes";
-import history from "../utils/history";
+import history from "../router/history";
 
 const Banner = () => {
   return (
@@ -79,7 +79,8 @@ class Home extends PureComponent {
     return (
       <div className="home-page">
         <Banner />
-        realworld 服务器 down 机了，项目刚好在重构，，不知道什么时候才能恢复。。。心塞 
+        {/* realworld 服务器 down 机了，项目刚好在重构，，不知道什么时候才能恢复。。。心塞  */}
+        找到了新的梯子了，还在重构
         {/* <div className="container page">
           <div className="row">
             <div className="col-md-9">

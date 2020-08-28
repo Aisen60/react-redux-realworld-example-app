@@ -2,29 +2,22 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import ListErrors from "../components/ListErrors";
-import { changeAppNav, userLogin } from "../store/actionCreators";
+import { AUTH_LOGIN } from "../constants/actionTypes";
 class Login extends PureComponent {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       email: "",
       password: "",
     };
-    this.changeEmail = (ev) => {
-      this.setState({ email: ev.target.value });
+    this.updateState = (field) => (ev) => {
+      const state = this.state;
+      const newState = Object.assign({}, state, { [field]: ev.target.value });
+      this.setState(newState);
     };
-    this.changePassword = (ev) => {
-      this.setState({ password: ev.target.value });
-    };
-    this.submitForm = (ev) => {
-      ev.preventDefault();
-      const data = {
-        user: {
-          email: this.state.email,
-          password: this.state.password,
-        },
-      };
-      this.props.handleUserLogin(data);
+    this.onSubmit = (ev) => {
+      ev.stopPropagation();
+      this.props.handleUserLogin(this.state.email, this.state.password);
     };
   }
   render() {
@@ -40,7 +33,7 @@ class Login extends PureComponent {
                 </Link>
               </p>
               <ListErrors errors={this.props.errors} />
-              <form onSubmit={this.submitForm}>
+              <form onSubmit={this.onSubmit}>
                 <fieldset>
                   <fieldset className="form-group">
                     <input
@@ -48,9 +41,7 @@ class Login extends PureComponent {
                       className="form-control form-control-lg"
                       placeholder="Email"
                       value={this.state.email}
-                      onChange={(ev) => {
-                        this.changeEmail(ev);
-                      }}
+                      onChange={this.updateState("email")}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -59,9 +50,7 @@ class Login extends PureComponent {
                       className="form-control form-control-lg"
                       placeholder="Password"
                       value={this.state.password}
-                      onChange={(ev) => {
-                        this.changePassword(ev);
-                      }}
+                      onChange={this.updateState("password")}
                     />
                   </fieldset>
                   <button
@@ -78,25 +67,17 @@ class Login extends PureComponent {
       </div>
     );
   }
-  componentDidMount() {
-    this.props.changePageTab();
-  }
 }
 const mapStateToProps = (state) => {
   return {
-    errors: state.errors,
+    errors: state.auth.errors,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    changePageTab: () => {
-      const action = changeAppNav("Sign in");
-      dispatch(action);
-    },
-    handleUserLogin: (data) => {
-      const action = userLogin(data);
-      dispatch(action);
+    handleUserLogin: (email, password) => {
+      dispatch({ type: AUTH_LOGIN, payload: { email, password } });
     },
   };
 };

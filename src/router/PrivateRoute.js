@@ -13,19 +13,27 @@ class PrivateRoute extends React.PureComponent {
       authenticated = true,
     } = this.props;
     return (
+      // <Route
+      //   path={path}
+      //   exact={exact}
+      //   render={(props) => {
+      //     return checked && authenticated ? (
+      //       React.createElement(component, props)
+      //     ) : (
+      //       <Redirect
+      //         to={{
+      //           pathname: "/login",
+      //         }}
+      //       />
+      //     );
+      //   }}
+      // ></Route>
+
       <Route
         path={path}
         exact={exact}
         render={(props) => {
-          return checked && authenticated ? (
-            React.createElement(component, props)
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/login",
-              }}
-            />
-          );
+          return React.createElement(component, props);
         }}
       ></Route>
     );
@@ -42,7 +50,7 @@ PrivateRoute.propTypes = {
 const mapStateToProps = (state) => {
   return {
     authenticated: state.auth.jwToken,
-  };  
+  };
 };
 
 export default connect(mapStateToProps, null)(PrivateRoute);
