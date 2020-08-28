@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import { HashRouter } from "react-router-dom";
-import history from "../utils/history";
+import history from "../router/history";
 import router from "./config";
 import PrivateRoute from "./PrivateRoute";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { CHANGE_COMMON_NAV } from "../constants/actionTypes";
+import { CHANGE_COMMON_NAV, AUTH_CURRENT } from "../constants/actionTypes";
 import { getUserInfo } from "../store/actionCreators";
 
 let _that;
@@ -28,6 +28,7 @@ class RouterView extends React.Component {
               component={r.component}
               checked={r.checked}
               key={r.path}
+              authenticated={true}
             />
           );
         })}
@@ -37,7 +38,7 @@ class RouterView extends React.Component {
   }
   componentDidMount() {
     this.props.changeCommonNav(history.location.pathname);
-    // this.props.authenticated && this.props.getUserInfo();
+    this.props.authenticated && this.props.getUserInfo();
   }
 }
 
@@ -50,8 +51,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getUserInfo: () => {
-      const action = getUserInfo();
-      dispatch(action);
+      dispatch({ type: AUTH_CURRENT });
     },
     changeCommonNav: (path) => {
       const action = { type: CHANGE_COMMON_NAV, payload: { path } };

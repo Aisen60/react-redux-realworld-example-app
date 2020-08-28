@@ -1,21 +1,32 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import ListErrors from "../components/ListErrors";
-
-import {
-  getUserInfo,
-  handleSettingInputChange,
-  changeCurrentUser,
-  cleanUserInfo,
-} from "../store/actionCreators";
+import { AUTH_CURRENT, AUTH_SAVE } from "../constants/actionTypes";
 
 class Settings extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      image: null,
+      username: null,
+      bio: null,
+      email: null,
+      password: null,
+    };
+    this.updateState = (field) => (ev) => {
+      const state = this.state;
+      const newState = Object.assign({}, state, { [field]: ev.target.value });
+      this.setState(newState);
+    };
+
+    this.onSubmit = (ev) => {
+      ev.preventDefault();
+      const user = this.state;
+      this.props.saveUserInfo(user);
+    };
   }
   render() {
-    const { image, username, bio, email, password } = this.props.currentUser;
+    const { image, username, bio, email, password } = this.state;
     // const userInfo = this.props.userInfo;
     return (
       <div className="settings-page">
@@ -24,13 +35,7 @@ class Settings extends PureComponent {
             <div className="col-md-6 offset-md-3 col-xs-12">
               <h1 className="text-xs-center">Your Settings</h1>
               <ListErrors errors={this.props.errors} />
-              <form
-                onSubmit={() => {
-                  this.props.handleChangeUserInfo({
-                    user: this.props.currentUser,
-                  });
-                }}
-              >
+              <form onSubmit={this.onSubmit}>
                 <fieldset>
                   <fieldset className="form-group">
                     <input
@@ -38,9 +43,7 @@ class Settings extends PureComponent {
                       placeholder="URL of profile picture"
                       className="form-control"
                       value={image || ""}
-                      onChange={(ev) => {
-                        this.props.handleInputChange(this, "image", ev);
-                      }}
+                      onChange={this.updateState("image")}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -49,9 +52,7 @@ class Settings extends PureComponent {
                       placeholder="Your username"
                       className="form-control form-control-lg"
                       value={username || ""}
-                      onChange={(ev) => {
-                        this.props.handleInputChange(this, "username", ev);
-                      }}
+                      onChange={this.updateState("username")}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -60,9 +61,7 @@ class Settings extends PureComponent {
                       placeholder="Short bio about you"
                       className="form-control form-control-lg"
                       value={bio || ""}
-                      onChange={(ev) => {
-                        this.props.handleInputChange(this, "bio", ev);
-                      }}
+                      onChange={this.updateState("bio")}
                     ></textarea>
                   </fieldset>
                   <fieldset className="form-group">
@@ -71,9 +70,7 @@ class Settings extends PureComponent {
                       placeholder="Email"
                       className="form-control form-control-lg"
                       value={email || ""}
-                      onChange={(ev) => {
-                        this.props.handleInputChange(this, "email", ev);
-                      }}
+                      onChange={this.updateState("email")}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -82,9 +79,7 @@ class Settings extends PureComponent {
                       placeholder="Password"
                       className="form-control form-control-lg"
                       value={password || ""}
-                      onChange={(ev) => {
-                        this.props.handleInputChange(this, "password", ev);
-                      }}
+                      onChange={this.updateState("password")}
                     />
                   </fieldset>
                   <button className="btn btn-lg btn-primary pull-xs-right">
@@ -105,35 +100,41 @@ class Settings extends PureComponent {
       </div>
     );
   }
+
+  componentDidMount() {
+    this.props.getUserInfo();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { username } = this.state;
+    if (nextProps.userInfo && username === null) {
+      this.setState(
+        Object.assign({}, this.state, {
+          image: nextProps.userInfo.image || "",
+          username: nextProps.userInfo.username,
+          bio: nextProps.userInfo.bio,
+          email: nextProps.userInfo.email,
+          password: nextProps.userInfo.password || "",
+        })
+      );
+    }
+  }
 }
 
 const mapStateToProps = (state) => {
   return {
-    errors: state.errors,
-    userInfo: state.userInfo,
-    currentUser: state.currentUser,
+    userInfo: state.auth.userInfo,
+    errors: state.auth.errors,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUserInfoDispatch: () => {
-      const action = getUserInfo();
-      dispatch(action);
+    getUserInfo: () => {
+      dispatch({ type: AUTH_CURRENT });
     },
-    handleInputChange: (that, type, ev) => {
-      const data = Object.assign({}, that.props.currentUser);
-      data[type] = ev.target.value;
-      const action = handleSettingInputChange(data);
-      dispatch(action);
-    },
-    handleChangeUserInfo: (userInfo) => {
-      const action = changeCurrentUser(userInfo);
-      dispatch(action);
-    },
-    handleUserLogout: () => {
-      const action = cleanUserInfo();
-      dispatch(action);
+    saveUserInfo: (user) => {
+      dispatch({ type: AUTH_SAVE, payload: { user } });
     },
   };
 };
