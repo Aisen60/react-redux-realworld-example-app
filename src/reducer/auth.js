@@ -23,6 +23,7 @@ export default (state = initState(), action) =>
         draft.userInfo = {};
         draft.errors = [];
         break;
+
       default:
         return draft;
     }

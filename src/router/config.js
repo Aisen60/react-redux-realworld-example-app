@@ -21,7 +21,7 @@ export const appRouter = [
   },
   {
     name: "newPost",
-    path: "/editor",
+    path: "/editor/:slug?",
     exact: true,
     component: loadable(() => import("../pages/Editor")),
     checked: true,
@@ -35,16 +35,23 @@ export const appRouter = [
   },
   {
     name: "profile",
-    path: "/@:username",
+    path: "/@:userName",
     exact: true,
     component: loadable(() => import("../pages/Profile")),
     checked: true,
   },
   {
     name: "profile",
-    path: "/@:username/favorites",
+    path: "/@:userName/favorites",
     exact: true,
     component: loadable(() => import("../pages/Profile")),
+    checked: true,
+  },
+  {
+    name: "article",
+    path: "/article/:slug",
+    exact: true,
+    component: loadable(() => import("../pages/Article")),
     checked: true,
   },
 ];

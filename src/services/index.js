@@ -8,7 +8,7 @@ const service = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use((config) => {
-  config.headers["Authorization"] = `Token ${getToken()}`;
+  getToken() && (config.headers["Authorization"] = `Token ${getToken()}`);
   return config;
 });
 
@@ -37,13 +37,13 @@ const Articles = {
     service.get(`/articles?author=${encode(author)}&${limit(5, page)}`),
   byTag: (tag, page) =>
     service.get(`/articles?tag=${encode(tag)}&${limit(10, page)}`),
-  del: (slug) => service.del(`/articles/${slug}`),
+  del: (slug) => service.delete(`/articles/${slug}`),
   favorite: (slug) => service.post(`/articles/${slug}/favorite`),
   favoritedBy: (author, page) =>
     service.get(`/articles?favorited=${encode(author)}&${limit(5, page)}`),
-  feed: () => service.get("/articles/feed?limit=10&offset=0"),
+  feed: (page) => service.get(`/articles/feed?${limit(10, page)}`),
   get: (slug) => service.get(`/articles/${slug}`),
-  unfavorite: (slug) => service.del(`/articles/${slug}/favorite`),
+  unfavorite: (slug) => service.delete(`/articles/${slug}/favorite`),
   update: (article) =>
     service.put(`/articles/${article.slug}`, { article: omitSlug(article) }),
   create: (article) => service.post("/articles", { article }),

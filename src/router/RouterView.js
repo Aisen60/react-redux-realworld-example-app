@@ -7,7 +7,6 @@ import PrivateRoute from "./PrivateRoute";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { CHANGE_COMMON_NAV, AUTH_CURRENT } from "../constants/actionTypes";
-import { getUserInfo } from "../store/actionCreators";
 
 let _that;
 

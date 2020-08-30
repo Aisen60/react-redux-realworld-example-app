@@ -1,32 +1,57 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import ListErrors from "../components/ListErrors";
+
 import {
-  getArticleDetails,
-  cleanEditor,
-  setEditor,
-  addTagList,
-  deleteTagList,
-  createdArticle,
-  updateArticle,
-} from "../store/actionCreators";
+  GET_ARTICLE_DETAILS_NEW_POST,
+  CREATE_ARTICLE,
+  UPDATE_ARTICLE,
+} from "../constants/actionTypes";
+
 class Editor extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       slug: this.props.match.params.slug,
+      title: "",
+      body: "",
+      description: "",
+      tagValue: "",
+      tagList: [],
     };
-    this.handleConfirm = this.handleConfirm.bind(this);
+    this.updateState = (field) => (ev) => {
+      const state = this.state;
+      const newState = Object.assign({}, state, { [field]: ev.target.value });
+      this.setState(newState);
+    };
+    this.addTag = (value) => {
+      this.setState({
+        tagValue: "",
+        tagList: [...this.state.tagList, value],
+      });
+    };
+    this.delTag = (index) => {
+      const taglist = [...this.state.tagList];
+      taglist.splice(index, 1);
+      this.setState({
+        tagList: [...taglist],
+      });
+    };
+    this.submitForm = (ev) => {
+      ev.stopPropagation();
+      const data = Object.assign({}, this.state);
+      delete data.tagValue;
+      if (this.state.slug) {
+        this.props.handleUpdateArticle(data);
+      } else {
+        delete data.slug;
+        this.props.handleCreatedArticle(data);
+      }
+    };
   }
 
   render() {
-    const {
-      title,
-      body,
-      description,
-      tagValue,
-      tagList,
-    } = this.props.currentEditor;
+    const { title, body, description, tagValue, tagList } = this.state;
     return (
       <div className="editor-page">
         <div className="container page">
@@ -41,9 +66,7 @@ class Editor extends PureComponent {
                       className="form-control form-control-lg"
                       placeholder="Article Title"
                       value={title}
-                      onChange={(ev) =>
-                        this.props.handleChangeValue(this, "title", ev)
-                      }
+                      onChange={this.updateState("title")}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -52,9 +75,7 @@ class Editor extends PureComponent {
                       className="form-control"
                       placeholder="What's this article about?"
                       value={description}
-                      onChange={(ev) =>
-                        this.props.handleChangeValue(this, "description", ev)
-                      }
+                      onChange={this.updateState("description")}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -63,9 +84,7 @@ class Editor extends PureComponent {
                       rows="8"
                       placeholder="Write your article (in markdown)"
                       value={body}
-                      onChange={(ev) =>
-                        this.props.handleChangeValue(this, "body", ev)
-                      }
+                      onChange={this.updateState("body")}
                     ></textarea>
                   </fieldset>
                   <fieldset className="form-group">
@@ -74,26 +93,22 @@ class Editor extends PureComponent {
                       className="form-control"
                       placeholder="Enter tags"
                       value={tagValue}
-                      onChange={(ev) =>
-                        this.props.handleChangeValue(this, "tagValue", ev)
-                      }
-                      onKeyDown={(ev) => {
+                      onChange={this.updateState("tagValue")}
+                      onKeyUp={(ev) => {
                         const keyCode = ev.keyCode,
                           value = ev.target.value;
                         if (keyCode === 13 && value.trim() !== "") {
-                          this.props.handleAddTagList(value);
+                          ev.stopPropagation();
+                          this.addTag(value);
                         }
                       }}
                     />
-                    <TagListView
-                      tagList={tagList}
-                      delete={this.props.handleDeleteTag}
-                    />
+                    <TagListView tagList={tagList} delete={this.delTag} />
                   </fieldset>
                   <button
                     className="btn btn-lg pull-xs-right btn-primary"
                     type="button"
-                    onClick={this.handleConfirm}
+                    onClick={this.submitForm}
                   >
                     Publish Article
                   </button>
@@ -110,17 +125,21 @@ class Editor extends PureComponent {
     const slug = this.state.slug;
     if (slug) {
       this.props.getCurrentArticle(slug);
-    } else {
-      this.props.handleCleanEditor();
     }
   }
 
-  handleConfirm() {
-    const slug = this.state.slug;
-    if (slug) {
-      this.props.handleUpdateArticle(this.props.currentEditor);
-    } else {
-      this.props.handleCreatedArticle(this.props.currentEditor);
+  componentWillReceiveProps(nextProps) {
+    const { title } = this.state;
+    if (nextProps.article && title === "") {
+      this.setState(
+        Object.assign({}, this.state, {
+          title: nextProps.article.title || "",
+          body: nextProps.article.body || "",
+          description: nextProps.article.description || "",
+          tagValue: "",
+          tagList: nextProps.article.tagList || [],
+        })
+      );
     }
   }
 }
@@ -149,46 +168,21 @@ const TagListView = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    currentEditor: state.currentEditor,
-    errors: state.errors,
+    article: state.editor.article,
+    errors: state.editor.errors,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleCleanEditor() {
-      const action = cleanEditor();
-      dispatch(action);
-    },
     getCurrentArticle(slug) {
-      const action = getArticleDetails(slug);
-      dispatch(action);
-    },
-    handleChangeValue: (that, type, ev) => {
-      const data = Object.assign({}, that.props.currentEditor);
-      data[type] = ev.target.value;
-      const action = setEditor(data);
-      dispatch(action);
-    },
-    handleAddTagList: (value) => {
-      const action = addTagList(value);
-      dispatch(action);
-    },
-    handleDeleteTag: (index) => {
-      const action = deleteTagList(index);
-      dispatch(action);
+      dispatch({ type: GET_ARTICLE_DETAILS_NEW_POST, payload: { slug } });
     },
     handleCreatedArticle: (data) => {
-      const action = createdArticle({ article: data });
-      dispatch(action);
+      dispatch({ type: CREATE_ARTICLE, payload: { data } });
     },
     handleUpdateArticle: (data) => {
-      const obj = {
-        slug: data.slug,
-        details: { article: data },
-      };
-      const action = updateArticle(obj);
-      dispatch(action);
+      dispatch({ type: UPDATE_ARTICLE, payload: { data } });
     },
   };
 };

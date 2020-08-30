@@ -1,8 +1,9 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import ListErrors from "../components/ListErrors";
-import { AUTH_CURRENT, AUTH_SAVE } from "../constants/actionTypes";
-
+import { AUTH_CURRENT, AUTH_SAVE, AUTH_CLEAN } from "../constants/actionTypes";
+import { destroyToken } from "../utils";
+import history from "../router/history";
 class Settings extends PureComponent {
   constructor(props) {
     super(props);
@@ -18,7 +19,6 @@ class Settings extends PureComponent {
       const newState = Object.assign({}, state, { [field]: ev.target.value });
       this.setState(newState);
     };
-
     this.onSubmit = (ev) => {
       ev.preventDefault();
       const user = this.state;
@@ -90,7 +90,7 @@ class Settings extends PureComponent {
               <hr></hr>
               <button
                 className="btn btn-outline-danger"
-                onClick={this.props.handleUserLogout}
+                onClick={this.props.userLogout}
               >
                 Or click here to logout.
               </button>
@@ -135,6 +135,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     saveUserInfo: (user) => {
       dispatch({ type: AUTH_SAVE, payload: { user } });
+    },
+    userLogout: (ev) => {
+      ev.preventDefault();
+      destroyToken();
+      history.push("/");
+      dispatch({ type: AUTH_CLEAN });
     },
   };
 };

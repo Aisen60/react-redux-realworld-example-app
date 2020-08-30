@@ -6,15 +6,17 @@ import TagList from "../components/TagList";
 import ListErrors from "../components/ListErrors";
 import { Link } from "react-router-dom";
 import { parseTime } from "../utils";
+
 import {
-  getArticleDetails,
-  followUser,
-  unFollowUser,
-  favoriteArticle,
-  UnFavoriteArticle,
-  getArticleComments,
-  createArticleComments,
-} from "../store/actionCreators";
+  GET_ARTICLE_DETAILS,
+  ARTICLE_FOLLOW_USER,
+  ARTICLE_UNFOLLOW_USER,
+  ARTICLE_FAVORITE,
+  ARTICLE_UNFAVORITE,
+  GET_ARTICLE_COMMENTS,
+  CREATE_ARTICLE_COMMENTS,
+  DELETE_ARTICLE_COMMENTS,
+} from "../constants/actionTypes";
 
 class Article extends PureComponent {
   constructor(props) {
@@ -32,17 +34,20 @@ class Article extends PureComponent {
 
     this.handleCreateComments = () => {
       const slug = this.state.slug,
-        data = {
-          comment: {
-            body: this.state.textValue,
-          },
+        comment = {
+          body: this.state.textValue,
         };
-      this.props.handleCreateComments(slug, data);
+      this.props.handleCreateComments(slug, comment);
+    };
+
+    this.handleDeleteComments = (commentId) => {
+      const slug = this.state.slug;
+      this.props.handleDeleteComments(slug, commentId);
     };
   }
 
   render() {
-    const articleDetails = this.props.articleDetails;
+    const articleDetails = this.props.article;
     if (Object.keys(articleDetails).length > 0) {
       return (
         <div className="article-page">
@@ -88,12 +93,18 @@ class Article extends PureComponent {
                   currentUser={this.props.userInfo}
                   errors={this.props.errors}
                   textChange={this.handleTextChange}
-                  create={this.handleCreateComments}
+                  create={() => {
+                    this.setState({
+                      textValue: "",
+                    });
+                    this.handleCreateComments();
+                  }}
                   value={this.state.textValue}
                 />
                 <CommentCard
                   currentUser={this.props.userInfo}
                   comments={this.props.comments}
+                  delete={this.handleDeleteComments}
                 />
               </div>
             </div>
@@ -166,7 +177,7 @@ const Comment = (props) => {
     return (
       <div>
         <ListErrors errors={props.errors} />
-        <form className="card comment-form">
+        <form className="card comment-form" onSubmit={props.create}>
           <div className="card-block">
             <textarea
               placeholder="Write a comment..."
@@ -179,9 +190,7 @@ const Comment = (props) => {
           </div>
           <div className="card-footer">
             <img className="comment-author-img" alt="" />
-            <button className="btn btn-sm btn-primary" onClick={props.create}>
-              Post Comment
-            </button>
+            <button className="btn btn-sm btn-primary">Post Comment</button>
           </div>
         </form>
       </div>
@@ -220,11 +229,17 @@ const CommentCard = (props) => {
             <span className="date-posted">
               {parseTime(new Date(item.updatedAt))}
             </span>
-            {Object.keys(currentUser).length > 0 && (
-              <span className="mod-options">
-                <i className="ion-trash-a"></i>
-              </span>
-            )}
+            {Object.keys(currentUser).length > 0 &&
+              item.author.username === currentUser.username && (
+                <span
+                  className="mod-options"
+                  onClick={() => {
+                    props.delete(item.id);
+                  }}
+                >
+                  <i className="ion-trash-a"></i>
+                </span>
+              )}
           </div>
         </div>
       );
@@ -235,42 +250,84 @@ const CommentCard = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    userInfo: state.userInfo,
-    articleDetails: state.articleDetails,
-    comments: state.currentArticleComment,
-    errors: state.errors,
+    article: state.article.article,
+    comments: state.article.comments,
+    errors: state.article.errors,
+    userInfo: state.auth.userInfo,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    /**
+     * 获取文章详情
+     * @param {string} slug 文章标识
+     */
     getCurrentArticle(slug) {
-      const action = getArticleDetails(slug);
-      dispatch(action);
+      dispatch({ type: GET_ARTICLE_DETAILS, payload: { slug } });
     },
+    /**
+     * 获取文章评论
+     * @param {string} slug 文章标识
+     */
     getCurrentComments(slug) {
-      const action = getArticleComments(slug);
-      dispatch(action);
+      dispatch({ type: GET_ARTICLE_COMMENTS, payload: { slug } });
     },
-    handleCreateComments(slug, data) {
-      const action = createArticleComments({slug, data});
-      dispatch(action);
+    /**
+     * 评价文章
+     * @param {string} slug 文章标识
+     * @param {string} comment 评价内容
+     */
+    handleCreateComments(slug, comment) {
+      dispatch({ type: CREATE_ARTICLE_COMMENTS, payload: { slug, comment } });
     },
+    /**
+     *
+     * @param {string} slug 文章标识
+     * @param {string} commentId 文章id
+     */
+    handleDeleteComments(slug, commentId) {
+      dispatch({ type: DELETE_ARTICLE_COMMENTS, payload: { slug, commentId } });
+    },
+    /**
+     * 关注用户
+     * @param {string} userName 用户名称
+     */
     handleFollow(userName) {
-      const action = followUser(userName);
-      dispatch(action);
+      dispatch({
+        type: ARTICLE_FOLLOW_USER,
+        payload: { userName },
+      });
     },
+    /**
+     * 取消关注用户
+     * @param {string} userName 用户名称
+     */
     handleUnFollow(userName) {
-      const action = unFollowUser(userName);
-      dispatch(action);
+      dispatch({
+        type: ARTICLE_UNFOLLOW_USER,
+        payload: { userName },
+      });
     },
+    /**
+     * 点赞文章
+     * @param {string} slug 文章标识
+     */
     handleFavorite(slug) {
-      const action = favoriteArticle(slug);
-      dispatch(action);
+      dispatch({
+        type: ARTICLE_FAVORITE,
+        payload: { slug },
+      });
     },
+    /**
+     * 取消点赞文章
+     * @param {string} slug 文章标识
+     */
     handleUnfavorite(slug) {
-      const action = UnFavoriteArticle(slug);
-      dispatch(action);
+      dispatch({
+        type: ARTICLE_UNFAVORITE,
+        payload: { slug },
+      });
     },
   };
 };

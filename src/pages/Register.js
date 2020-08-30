@@ -17,6 +17,7 @@ class Login extends PureComponent {
       this.setState(newState);
     };
     this.onSubmit = (ev) => {
+      ev.preventDefault();
       ev.stopPropagation();
       this.props.handleAuthRegister(
         this.state.username,

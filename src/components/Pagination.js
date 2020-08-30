@@ -5,10 +5,11 @@ const PageItem = (props) => {
   return (
     <li className={props.active ? "page-item active" : "page-item"}>
       <Link
-        to=""
+        to="/"
         className="page-link"
-        onClick={(e) => {
-          props.pagination((props.num - 1) * props.limit);
+        onClick={(ev) => {
+          ev.preventDefault();
+          props.pagination(props.num);
         }}
       >
         {props.num}
@@ -18,19 +19,19 @@ const PageItem = (props) => {
 };
 
 export default (props) => {
-  const pageNum = Math.ceil(props.total / props.limit); // 总页数
-  const current = props.offset / props.limit; // 当前页数
+  const limit = props.limit ? props.limit : 10;
+  const pageNum = Math.ceil(props.total / limit); // 总页数
+  const page = props.page; // 当前页数
 
   const PageItemView = () => {
     let vnode = [];
-    for (let item = 0; item < pageNum; item++) {
+    for (let item = 1; item <= pageNum; item++) {
       vnode.push(
         <PageItem
+          active={item === page}
+          num={item}
           pagination={props.pagination}
-          key={item}
-          num={item + 1}
-          limit={props.limit}
-          active={item === current}
+          key={item + "-" + Math.round(new Date())}
         ></PageItem>
       );
     }

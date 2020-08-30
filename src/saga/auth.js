@@ -25,9 +25,9 @@ function* authLogin(params) {
       userInfo = response.data.user;
     yield put({ type: AUTH_CLEAN });
     yield put({ type: AUTH_INIT, data: userInfo });
-    saveToken(userInfo.token);
     yield setAuthError([]);
-    history.push("/");
+    yield saveToken(userInfo.token);
+    yield history.push("/");
   } catch (e) {
     yield setAuthError(e.response.data.errors);
     console.error(e);
