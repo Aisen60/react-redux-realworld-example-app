@@ -2,6 +2,7 @@ import produce from "immer";
 import {
   INIT_USER_PROFILE,
   INIT_PROFILE_ARTICLE,
+  INIT_PROFILE_PAGE,
 } from "../constants/actionTypes";
 const initState = () => ({
   profile: {},
@@ -21,6 +22,10 @@ export default (state = initState(), action) =>
         draft.list = action.payload.articles;
         draft.count = action.payload.articlesCount;
         break;
+      case INIT_PROFILE_PAGE:
+        draft.page = action.payload.page;
+        break;
+
       default:
         return draft;
     }

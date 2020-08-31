@@ -5,6 +5,7 @@ import {
   GET_PROFILE_ARTICLE,
   GET_PROFILE_FAVORITED,
   INIT_PROFILE_ARTICLE,
+  INIT_PROFILE_PAGE,
 } from "../constants/actionTypes";
 import api from "../services";
 
@@ -36,6 +37,10 @@ function* getProfilesArticle(action) {
     yield put({
       type: INIT_PROFILE_ARTICLE,
       payload: { articles, articlesCount },
+    });
+    yield put({
+      type: INIT_PROFILE_PAGE,
+      payload: { page },
     });
   } catch (e) {
     console.error(e);
