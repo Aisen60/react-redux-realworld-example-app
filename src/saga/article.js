@@ -85,7 +85,6 @@ function* createArticleComments(action) {
 function* deleteArticleComments(action) {
   try {
     yield api.Comments.del(action.payload.slug, action.payload.commentId);
-    debugger;
     yield getArticleComments(action);
   } catch (e) {
     console.error(e);

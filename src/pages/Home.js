@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { YOUR_FEED, GLOBAL_FEED } from "../constants/confog";
+import { YOUR_FEED, GLOBAL_FEED } from "../config";
 import {
   GET_ALL_TAGS,
   GET_HOME_ARTICLE_LIST,

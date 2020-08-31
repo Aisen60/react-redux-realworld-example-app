@@ -38,21 +38,18 @@ export const appRouter = [
     path: "/@:userName",
     exact: true,
     component: loadable(() => import("../pages/Profile")),
-    checked: true,
   },
   {
     name: "profile",
     path: "/@:userName/favorites",
     exact: true,
     component: loadable(() => import("../pages/Profile")),
-    checked: true,
   },
   {
     name: "article",
     path: "/article/:slug",
     exact: true,
     component: loadable(() => import("../pages/Article")),
-    checked: true,
   },
 ];
 

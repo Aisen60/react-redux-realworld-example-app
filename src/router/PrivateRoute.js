@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
 
 class PrivateRoute extends React.PureComponent {
   render() {
@@ -9,31 +8,28 @@ class PrivateRoute extends React.PureComponent {
       path,
       exact = false,
       component,
-      checked = true,
-      authenticated = true,
+      checked = false,
+      authenticated,
     } = this.props;
     return (
-      // <Route
-      //   path={path}
-      //   exact={exact}
-      //   render={(props) => {
-      //     return checked && authenticated ? (
-      //       React.createElement(component, props)
-      //     ) : (
-      //       <Redirect
-      //         to={{
-      //           pathname: "/login",
-      //         }}
-      //       />
-      //     );
-      //   }}
-      // ></Route>
-
       <Route
         path={path}
         exact={exact}
         render={(props) => {
-          return React.createElement(component, props);
+          // return React.createElement(component, props);
+          if (!checked) {
+            return React.createElement(component, props);
+          } else if (checked && authenticated) {
+            return React.createElement(component, props);
+          } else {
+            return (
+              <Redirect
+                to={{
+                  pathname: "/login",
+                }}
+              />
+            );
+          }
         }}
       ></Route>
     );
@@ -47,10 +43,4 @@ PrivateRoute.propTypes = {
   checked: PropTypes.bool,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    authenticated: state.auth.jwToken,
-  };
-};
-
-export default connect(mapStateToProps, null)(PrivateRoute);
+export default PrivateRoute;

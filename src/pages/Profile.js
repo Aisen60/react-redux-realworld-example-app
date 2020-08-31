@@ -37,7 +37,6 @@ class User extends PureComponent {
           tab: type,
         },
         () => {
-          debugger;
           this.handlePageChange(1);
         }
       );

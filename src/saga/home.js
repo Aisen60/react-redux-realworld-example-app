@@ -6,7 +6,7 @@ import {
   INIT_HOME_ARTICLE_LIST,
   INIT_HOME_PAGE,
 } from "../constants/actionTypes";
-import { YOUR_FEED, GLOBAL_FEED } from "../constants/confog";
+import { YOUR_FEED, GLOBAL_FEED } from "../config";
 import api from "../services";
 
 function* getAllTags() {

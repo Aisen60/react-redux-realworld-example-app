@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL } from "../constants/confog";
+import { API_URL } from "../config";
 import { getToken } from "../utils/index";
 
 const service = axios.create({

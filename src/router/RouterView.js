@@ -27,7 +27,7 @@ class RouterView extends React.Component {
               component={r.component}
               checked={r.checked}
               key={r.path}
-              authenticated={true}
+              authenticated={this.props.authenticated}
             />
           );
         })}
